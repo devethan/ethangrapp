@@ -2,6 +2,11 @@ import React from 'react';
 import { AppLoading, Asset, Font } from 'expo';
 // import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, Text, View } from 'react-native';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import configureStore from './redux/configureStore';
+const { store, persistor } = configureStore();
+import AppContainer from './components/AppContainer'
 
 class App extends React.Component {
   state = {
@@ -18,9 +23,14 @@ class App extends React.Component {
         />
       )}
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          {/* <View style={styles.container}>
+            <Text>Open up App.js to start working on your app!</Text>
+          </View> */}
+          <AppContainer />
+        </PersistGate>
+      </Provider>
     );
   }
 
@@ -47,14 +57,5 @@ class App extends React.Component {
     });
   };
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 export default App;
