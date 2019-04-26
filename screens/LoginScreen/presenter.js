@@ -7,7 +7,8 @@ import {
   TextInput,
   Dimensions,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -41,7 +42,11 @@ const presenter = props => (
       />
       <TouchableOpacity style={styles.touchable} onPressOut={props.submit}>
         <View style={styles.button}>
-          <Text style={styles.btnText}>Log In</Text>
+          {props.isSubmitting ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <Text style={styles.btnText}>Log In</Text>
+          )}
         </View>
       </TouchableOpacity>
       <TouchableOpacity style={styles.fbContainer} onPressOut={props.fbLogin}>

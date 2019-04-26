@@ -8,11 +8,13 @@ import configureStore from './redux/configureStore';
 const { store, persistor } = configureStore();
 import AppContainer from './components/AppContainer'
 
+
 class App extends React.Component {
   state = {
     isLoadingComplete: false
   }
   render() {
+    // store.dispatch({type:'LOG_OUT'});
     const { isLoadingComplete } = this.state;
     if(!isLoadingComplete) {
       return ( 
