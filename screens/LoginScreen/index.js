@@ -1,4 +1,15 @@
-import { connect } from 'react-redux';
-import Container from './container';
+import { connect } from "react-redux";
+import Container from "./container";
+import { actionCreator as userActions } from "../../redux/modules/user";
 
-export default connect()(Container);
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    login: (username, password) => {
+        dispatch(userActions.login(username, password))
+    }
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Container);

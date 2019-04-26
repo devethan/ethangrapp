@@ -29,19 +29,22 @@ const presenter = props => (
         style={styles.textInput}
         autoCapitalize="none"
         autoCorrect={false}
+        value={props.username}
+        onChangeText={props.changeUsername}
       />
       <TextInput
         placeholder="Password"
         style={styles.textInput}
         secureTextEntry={true}
-
+        value={props.password}
+        onChangeText={props.changePassword}
       />
-      <TouchableOpacity style={styles.touchable}>
+      <TouchableOpacity style={styles.touchable} onPressOut={props.submit}>
         <View style={styles.button}>
           <Text style={styles.btnText}>Log In</Text>
         </View>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.fbContainer}>
+      <TouchableOpacity style={styles.fbContainer} onPressOut={props.fbLogin}>
         <View style={styles.fbView}>
           <Ionicons name="logo-facebook" size={22} color="#3E99EE" />
           <Text style={styles.fbText}>Log in with Facebook</Text>
