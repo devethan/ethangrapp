@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
 import LoggedOutNavigation from "../../navigation/LoggedOutNavigation";
+import RootNavigation from "../../navigation/RootNavigation";
 
 class AppContainer extends Component {
   render() {
@@ -9,7 +10,7 @@ class AppContainer extends Component {
       <View style={styles.container}>
         <StatusBar hidden={false} />
         {isLoggedIn ? (
-          <Text>You are Logged In</Text>
+          <RootNavigation />
         ) : (
           <LoggedOutNavigation/>
         )}
