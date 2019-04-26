@@ -50,8 +50,16 @@ class Container extends Component {
       }
     }
   };
-  _fbLogin = () => {
-
+  _fbLogin = async () => {
+    const { fbLogin } = this.props;
+    this.setState({isSubmitting: true})
+    const fbLoginResult = await fbLogin();
+    if( !fbLoginResult ) {
+      Alert.alert('Something went wrong, try again.');
+      this.setState({ isSubmitting: false })
+    } else {
+      Alert.alert('facebook login success');
+    } 
   }
 }
 

@@ -1,7 +1,8 @@
 // imports
 
-import { API_URL } from "../../constants";
+import { API_URL, FB_APP_ID } from "../../constants";
 import { AsyncStorage } from "react-native";
+import { Facebook } from 'expo';
 
 // actions
 
@@ -42,10 +43,47 @@ function login(username, password) {
           dispatch(setLogin(json.token));
           return true;
         } else {
+          dispatch(logout());
           return false;
         }
       });
   };
+}
+
+function fbLogin() {
+  return async dispatch => {
+    const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+      FB_APP_ID, 
+      {
+        permissions: ["public_profile", "email"]
+      }
+    );
+    console.log(type)
+    if(type === "success") {
+      return fetch(`${API_URL}/users/login/facebook/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          access_token: token
+        })
+      })
+      .then(res => res.json())
+      .then(json => {
+        if(json.token) {
+          console.log(json);
+          dispatch(setLogin(json.token));
+          return true
+        } else {
+          dispatch(logout());
+          return false
+        }
+      })
+    } else {
+      return console.log(`access denied`)
+    }
+  }
 }
 
 // initial state
@@ -92,7 +130,8 @@ function applyLogout(state, action) {
 
 const actionCreator = {
   login,
-  logout
+  logout,
+  fbLogin,
 };
 
 export { actionCreator };
