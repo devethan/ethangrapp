@@ -39,7 +39,6 @@ class Container extends Component {
         isSubmitting: true
       });
       const loginResult = await login(username, password);
-      console.log(loginResult)
       if(!loginResult) {
         Alert.alert('Something went wrong, try again.');
         this.setState({
