@@ -9,6 +9,8 @@ import {
   StyleSheet
 } from "react-native";
 import FadeIn from "react-native-fade-in-image";
+import PhotoAction from '../PhotoAction';
+import {withNavigation} from 'react-navigation'
 
 const { width, height } = Dimensions.get("window");
 
@@ -50,6 +52,7 @@ const Photo = props => {
           style={{ width, height: 300 }}
         />
       </FadeIn>
+      <PhotoAction isLiked={props.isLiked} />
       <View style={styles.photoMeta}>
         <View style={styles.comment}>
             <Text style={styles.commentAuthor}>
@@ -58,7 +61,7 @@ const Photo = props => {
             </Text>
         </View>
         {comments.length > 0 && (
-            <TouchableOpacity>
+            <TouchableOpacity onPressOut={()=>props.navigation.navigate('Comments')}>
             <View style={styles.commentsLink}>
                 {comments.length === 1 ? (
                 <Text style={styles.linkText}>View 1 comment</Text>
@@ -131,4 +134,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Photo;
+export default withNavigation(Photo);
