@@ -52,7 +52,7 @@ const Photo = props => {
           style={{ width, height: 300 }}
         />
       </FadeIn>
-      <PhotoAction isLiked={props.isLiked} />
+      <PhotoAction isLiked={props.isLiked} likeCount={props.likeCount} handlePress={props.handlePress}/>
       <View style={styles.photoMeta}>
         <View style={styles.comment}>
             <Text style={styles.commentAuthor}>

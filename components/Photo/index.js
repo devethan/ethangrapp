@@ -1,5 +1,21 @@
-import { connect } from 'react-redux'
-import Container from './container';
+import { connect } from "react-redux";
+import Container from "./container";
+import { actionCreators as photoActions } from "../../redux/modules/photos";
 
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { id } = ownProps;
+  return {
+    dispatchLike: isLiked => {
+      if (!isLiked) {
+        return dispatch(photoActions.likePhoto(id));
+      } else {
+        return dispatch(photoActions.unLikePhoto(id));
+      }
+    }
+  };
+};
 
-export default connect()(Container)
+export default connect(
+  null,
+  mapDispatchToProps
+)(Container);

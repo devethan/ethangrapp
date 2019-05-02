@@ -9,8 +9,8 @@ const PhotoAction = props => {
       <View style={styles.actions}>
         {/* likeAction, CommentAction */}
         <TouchableOpacity
-            // like/unlike action
-            // onPressOut={}
+        // like/unlike action
+          onPressOut={props.handlePress}
         >
           <View style={styles.action}>
             <Ionicons
@@ -31,7 +31,9 @@ const PhotoAction = props => {
       <TouchableOpacity onPressOut={() => props.navigation.navigate("Likes")}>
         {/* Count of likes */}
         <View>
-          <Text style={styles.likes}>10 likes</Text>
+          <Text style={styles.likes}>
+            {props.likeCount} {props.likeCount === 1 ? "like" : "likes"}
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
