@@ -5,7 +5,7 @@ class Container extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLiked: props.is_Liked,
+      isLiked: props.is_liked,
       likeCount: props.like_count
     };
   }

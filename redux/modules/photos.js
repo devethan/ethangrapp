@@ -1,12 +1,15 @@
 // import
 
 import { API_URL } from "../../constants";
+import { actionCreators as userActions } from "./user";
 
 // actions
 
 const SET_FEED = "SET_FEED";
 const LIKE_PHOTO = "LIKE_PHOTO";
 const UNLIKE_PHOTO = "UNLIKE_PHOTO";
+const SET_USER_LIST = "SET_USER_LIST";
+const SET_SEARCH = "SET_SEARCH";
 
 // actions creators
 
@@ -26,6 +29,18 @@ function doUnLikePhoto(photoId) {
   return {
     type: UNLIKE_PHOTO,
     photoId
+  };
+}
+function setUserList(userList) {
+  return {
+    type: SET_USER_LIST,
+    userList
+  };
+}
+function setSearch(search) {
+  return {
+    type: SET_SEARCH,
+    search
   };
 }
 
@@ -61,8 +76,12 @@ function likePhoto(photoId) {
       }
     }).then(res => {
       if (res.status === 401) {
-      } else if (!res.ok) {
-        dispatch(doUnLikePhoto(photoId));
+        dispatch(userActions.logOut());
+      } else if (res.ok) {
+        return true;
+      } else {
+        dispatch(doUnLikePhoto(photoId))
+        return false;
       }
     });
   };
@@ -73,16 +92,87 @@ function unLikePhoto(photoId) {
       user: { token }
     } = getState();
     return fetch(`${API_URL}/images/${photoId}/unlikes/`, {
-      method: "POST",
+      method: "DELETE",
       headers: {
         Authorization: `JWT ${token}`
       }
     }).then(res => {
       if (res.status === 401) {
-      } else if (!res.ok) {
-        dispatch(doLikePhoto(photoId));
+        dispatch(userActions.logOut());
+      } else if (res.ok) {
+        return true;
+      } else {
+        dispatch(doLikePhoto(photoId))
+        return false;
       }
     });
+  };
+}
+function getLikePhoto(photoId) {
+  return (dispatch, getState) => {
+    const {
+      user: { token }
+    } = getState();
+    return fetch(`${API_URL}/images/${photoId}/likes/`, {
+      headers: {
+        Authorization: `JWT ${token}`
+      }
+    }).then(res => {
+      if (res.status === 401) {
+        dispatch(userActions.logOut());
+      } else {
+        return res.json();
+      }
+    })
+    .then(json =>{
+      dispatch(setUserList(json))
+    })
+  };
+}
+
+function getSearch() {
+  return (dispatch, getState) => {
+    const {
+      user: { token }
+    } = getState();
+    fetch(`${API_URL}/images/search/`, {
+      headers: {
+        // "Content-Type": "application/json",
+        Authorization: `JWT ${token}`
+      }
+    })
+      .then(response => {
+        console.log(response);
+        if (response.status === 401) {
+          dispatch(userActions.logOut());
+        } else {
+          return response.json();
+        }
+      })
+      .then(json => {
+        dispatch(setSearch(json));
+      });
+  };
+}
+
+function searchByHashtag(hashtag) {
+  return (dispatch, getState) => {
+    const {
+      user: { token }
+    } = getState();
+    fetch(`${API_URL}/images/search/?hashtags=${hashtag}`, {
+      headers: {
+        Authorization: `JWT ${token}`
+      }
+    })
+      .then(response => {
+        if (response.status === 401) {
+          dispatch(userActions.logOut());
+        } else {
+          return response.json();
+        }
+      })
+      .then(json => dispatch(setSearch(json)));
   };
 }
 
@@ -99,6 +189,10 @@ function reducer(state = initialState, action) {
       return applyLikePhoto(state, action);
     case UNLIKE_PHOTO:
       return applyUnLikePhoto(state, action);
+    case SET_USER_LIST:
+      return applySetUserList(state, action);
+    case SET_SEARCH:
+      return applySetSearch(state, action);
     default:
       return state;
   }
@@ -115,30 +209,37 @@ function applySetFeed(state, action) {
 }
 function applyLikePhoto(state, action) {
   const { photoId } = action;
-  const { feed } = state;
-  const updatedFeed = feed.map(photo=> {
-    if(photo.id === photoId) {
-      return {...photo, is_liked: true, like_count: photo.like_count+1}
-    }
-    return photo
-  })
   return {
     ...state,
-    feed: updatedFeed
+    photoId
   };
 }
 function applyUnLikePhoto(state, action) {
   const { photoId } = action;
   const { feed } = state;
-  const updatedFeed = feed.map(photo=> {
-    if(photo.id === photoId) {
-      return {...photo, is_liked: false, like_count: photo.like_count-1}
+  const updatedFeed = feed.map(photo => {
+    if (photo.id === photoId) {
+      return { ...photo, is_liked: false, like_count: photo.like_count - 1 };
     }
-    return photo
-  })
+    return photo;
+  });
   return {
     ...state,
     feed: updatedFeed
+  };
+}
+function applySetUserList(state, action) {
+  const { userList } = action;
+  return {
+    ...state,
+    userList
+  };
+}
+function applySetSearch(state, action) {
+  const { search } = action;
+  return {
+    ...state,
+    search
   };
 }
 
@@ -147,7 +248,10 @@ function applyUnLikePhoto(state, action) {
 const actionCreators = {
   getFeed,
   likePhoto,
-  unLikePhoto
+  unLikePhoto,
+  getLikePhoto,
+  getSearch,
+  searchByHashtag
 };
 
 export { actionCreators };

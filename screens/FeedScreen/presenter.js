@@ -20,9 +20,7 @@ const FeedScreen = props => (
     }
   >
     <View>
-      {props.feed && props.feed.map(photo => {
-        return <Photo {...photo} key={photo.id} />;
-      })}
+      {props.feed && props.feed.map(photo => <Photo {...photo} key={photo.id} />)}
     </View>
   </ScrollView>
 );

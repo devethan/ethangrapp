@@ -1,17 +1,32 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { connect } from "react-redux";
+import Container from "./container";
+import { actionCreators as photoActions } from "../../redux/modules/photos";
 
-const LikeScreen = () => <View style={styles.container}>
-  <Ionicons name={"ios-heart"} size={30} color={'red'} />
-</View>;
+const mapStateToProps = (state, ownProps) => {
+  const {
+    photos: { userList }
+  } = state;
+  return {
+    userList
+  };
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    fetchUserList: () => {
+      const {
+        navigation: {
+          state: {
+            params: { photoId }
+          }
+        }
+      } = ownProps;
+      dispatch(photoActions.getLikePhoto(photoId));
+    }
+  };
+};
 
-export default LikeScreen;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Container);

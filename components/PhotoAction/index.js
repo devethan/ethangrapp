@@ -4,12 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { withNavigation } from "react-navigation";
 
 const PhotoAction = props => {
+  // console.log(props)
   return (
     <View style={styles.container}>
       <View style={styles.actions}>
         {/* likeAction, CommentAction */}
         <TouchableOpacity
-        // like/unlike action
+          // like/unlike action
           onPressOut={props.handlePress}
         >
           <View style={styles.action}>
@@ -28,7 +29,12 @@ const PhotoAction = props => {
           </View>
         </TouchableOpacity>
       </View>
-      <TouchableOpacity onPressOut={() => props.navigation.navigate("Likes")}>
+      <TouchableOpacity
+        onPressOut={() => {
+          const photoId = props.photoId;
+          props.navigation.navigate("Likes", { photoId });
+        }}
+      >
         {/* Count of likes */}
         <View>
           <Text style={styles.likes}>
