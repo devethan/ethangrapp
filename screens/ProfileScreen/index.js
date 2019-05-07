@@ -1,18 +1,21 @@
-import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { connect } from "react-redux";
+import { actionCreators as userActions } from "../../redux/modules/user";
+import Container from "./container";
 
-const ProfileScreen = () => (
-  <View style={styles.container}>
-    <Text>Profile</Text>
-  </View>
-);
+const mapStateToProps = (state, ownProps) => {
+    const { user: { profile } } = state;
+    console.log(profile)
+    return {
+        profile
+    };
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        getOwnProfile: () => {
+            dispatch(userActions.getOwnProfile());
+        }
+    };
+};
 
-export default ProfileScreen;
+export default connect(mapStateToProps, mapDispatchToProps)(Container);

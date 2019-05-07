@@ -91,6 +91,53 @@ function fbLogin() {
   };
 }
 
+function getOwnProfile() {
+  return (dispatch, getState) => {
+    const {
+      user: {
+        token,
+        profile: { pk }
+      }
+    } = getState();
+    const {user:{profile}} = getState();
+    console.log(profile)
+    fetch(`${API_URL}/users/${pk}/`, {
+      headers: {
+        Authorization: `JWT ${token}`
+      }
+    })
+      .then(response => {
+        if (response.status === 401) {
+          dispatch(logOut());
+        } else {
+          return response.json();
+        }
+      })
+      .then(json => dispatch(setUser(json)));
+  };
+}
+
+function getProfile(username) {
+  return (dispatch, getState) => {
+    const {
+      user: { token }
+    } = getState();
+    return fetch(`${API_URL}/users/${username}/`, {
+      headers: {
+        Authorization: `JWT ${token}`
+      }
+    })
+      .then(response => {
+        if (response.status === 401) {
+          dispatch(logOut());
+        } else {
+          return response.json();
+        }
+      })
+      .then(json => json);
+  };
+}
+
 // initial state
 
 const initialState = {
@@ -146,7 +193,9 @@ function applySetUser(state, action) {
 const actionCreator = {
   login,
   logout,
-  fbLogin
+  fbLogin,
+  getOwnProfile,
+  getProfile
 };
 
 export { actionCreator };

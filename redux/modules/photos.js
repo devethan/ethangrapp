@@ -142,7 +142,6 @@ function getSearch() {
       }
     })
       .then(response => {
-        console.log(response);
         if (response.status === 401) {
           dispatch(userActions.logOut());
         } else {
